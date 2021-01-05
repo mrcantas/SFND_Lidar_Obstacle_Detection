@@ -1,4 +1,4 @@
-// PCL lib Functions for processing point clouds 
+// PCL lib Functions for processing point clouds
 
 #include "processPointClouds.h"
 
@@ -70,7 +70,7 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
 
 
 template<typename PointT>
-std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, typename pcl::PointCloud<PointT>::Ptr cloud) 
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, typename pcl::PointCloud<PointT>::Ptr cloud)
 {
   // TODO: Create two new point clouds, one cloud with obstacles and other with segmented plane
     typename pcl::PointCloud<PointT>::Ptr obstacles (new pcl::PointCloud<PointT>);
@@ -96,11 +96,11 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 	std::unordered_set<int> inliersResult;
 
 	srand(time(NULL));
-	
+
 	// TODO: Fill in this function
-	int range=cloud->points.size();	
-	
-	// For max iterations 
+	int range=cloud->points.size();
+
+	// For max iterations
 	for(int i=0 ;i<maxIterations; i++){
 	std::unordered_set<int> inliers;
 	// Randomly sample subset and fit line
@@ -131,7 +131,7 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 		if (d<= distanceTol)
 			inliers.insert(j);
 	}
-	
+
 	// Measure distance between every point and fitted line
 	// If distance is smaller than threshold count it as inlier
 	if (inliers.size()> inliersResult.size())
@@ -167,8 +167,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
     pcl::SACSegmentation<PointT> seg;
 
-    seg.setOptimizeCoefficients(true); 
-    
+    seg.setOptimizeCoefficients(true);
+
     seg.setModelType(pcl::SACMODEL_PLANE);
     seg.setMethodType(pcl::SAC_RANSAC);
     seg.setMaxIterations(maxIterations);
@@ -205,7 +205,7 @@ std::vector<std::vector<int>> ProcessPointClouds<PointT>::findEuclideanClusterIn
 	// TODO: Fill out this function to return list of indices for each cluster
 	std::vector<std::vector<int>> clusters;
 	std::vector<bool> processed(points.size(),false);
-	int id=0;	
+	int id=0;
 	while(id<points.size())
 	{
 		if(!processed[id]){
@@ -226,16 +226,16 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     std::vector<std::vector<float>> points;
     std::vector<float> point;
 
-    for (int index=0 ; index<cloud->points.size();index++) 
-    {  
+    for (int index=0 ; index<cloud->points.size();index++)
+    {
         point= {cloud->points[index].x,cloud->points[index].y,cloud->points[index].z};
         points.push_back(point);
         tree->insert(point,index);
     }
     std::vector<std::vector<int>> ids_in_clusters = findEuclideanClusterIndicies(points, tree, clusterTolerance);
-    
+
     std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
-    
+
     for(std::vector<int> cluster : ids_in_clusters)
   	{
   		typename pcl::PointCloud<PointT>::Ptr clusterCloud( new pcl::PointCloud<PointT>());
@@ -247,8 +247,8 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
       }
     }
     auto endTime = std::chrono::steady_clock::now();
-    auto elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
-    std::cout << "obstacle clustering took " << elapsedTime.count() << " microseconds" << std::endl;
+    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    std::cout << "obstacle clustering took " << elapsedTime.count() << " milliseconds" << std::endl;
 
     return clusters ;
 }
@@ -269,7 +269,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     tree->setInputCloud(cloud);
     pcl::EuclideanClusterExtraction<PointT> ec;
     std::vector<pcl::PointIndices> cluster_indices;
-    ec.setClusterTolerance (clusterTolerance); 
+    ec.setClusterTolerance (clusterTolerance);
     ec.setMinClusterSize (minSize);
     ec.setMaxClusterSize (maxSize);
     ec.setSearchMethod (tree);
