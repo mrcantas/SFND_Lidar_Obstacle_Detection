@@ -1,4 +1,4 @@
-# Sensor Fusion Self-Driving Car Course
+# Lidar Obstacle Detection (Sensor Fusion Self-Driving Car Course)
 
 <img src="media/ObstacleDetectionFPS.gif" width="700" height="400" />
 
